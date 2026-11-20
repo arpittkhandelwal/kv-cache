@@ -340,7 +340,7 @@ def main():
                 "layer_scope": scope,
                 "strength": strength,
                 "prediction": pred,
-                "raw_prediction": raw_text[:300].replace("\n", " "),
+                "raw_prediction": raw_text.replace("\n", " "),
                 "correct": correct,
                 "clean_prediction": clean_pred,
                 "clean_correct": clean_ok,
@@ -393,7 +393,8 @@ def main():
 
         if healthy_n > 0:
             healthy_correct = sum(1 for r in healthy_matching if r["correct"])
-            healthy_acc = f"{(healthy_correct / healthy_n) * 100.0:>5.1f}% ({healthy_correct}/{healthy_n})"
+            flag = " [Low-N]" if healthy_n < 10 else ""
+            healthy_acc = f"{(healthy_correct / healthy_n) * 100.0:>5.1f}% ({healthy_correct}/{healthy_n}){flag}"
         else:
             healthy_acc = "N/A (0 healthy)"
 
