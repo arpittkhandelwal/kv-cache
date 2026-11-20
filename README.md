@@ -135,5 +135,5 @@ A 30-sample GSM8K sweep comparing clean control vs Key-only Gaussian noise ($\si
 
 1. **Single-Machine Execution**: Latent agent handoffs currently occur in-memory on a single device (`DynamicCache` clone in unified RAM). There is no distributed or network transport layer (e.g. gRPC/TCP/NCCL) yet.
 2. **HuggingFace Backend (Not vLLM)**: Inference uses native PyTorch/HuggingFace transformers (`DynamicCache`). While providing exact tensor hook access, it does not use PagedAttention or high-throughput batch schedulers.
-3. **Model Scale & Verbosity**: Using `Qwen3-0.6B` enables fast local iteration on a 16GB Mac, but introduces small-model reasoning quirks (verbose thinking monologues that can exhaust token budgets).
+3. **Model Scale & Verbosity**: Using `Qwen3-0.6B` enables fast local iteration on a 16GB Mac, but introduces small-model reasoning quirks (reasoning length and output formatting under investigation).
 4. **Synchronous Handoff**: Handoffs are strictly sequential; parallel or asynchronous agent topologies (e.g. voting ensembles or tree search) are not yet modeled.
