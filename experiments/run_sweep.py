@@ -7,10 +7,12 @@ import argparse
 import csv
 import json
 import difflib
+import re
 from typing import List, Dict, Any, Optional, Tuple
 
 import torch
 from tqdm import tqdm
+from transformers.cache_utils import DynamicCache
 
 # Add platform/LatentMAS to path
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -19,9 +21,10 @@ if LATENT_MAS_DIR not in sys.path:
     sys.path.insert(0, LATENT_MAS_DIR)
 
 from data import load_gsm8k
-from models import ModelWrapper
+from models import ModelWrapper, _past_length
 from methods.latent_mas import LatentMASMethod
-from utils import auto_device, set_seed
+from prompts import build_agent_message_sequential_latent_mas
+from utils import auto_device, set_seed, normalize_answer, extract_gsm8k_answer
 from kv_hook import KVHookManager
 from tamper import TamperHook
 
@@ -62,6 +65,32 @@ def compute_text_similarity(s1: str, s2: str) -> float:
         return 0.0
     return round(difflib.SequenceMatcher(None, s1.strip(), s2.strip()).ratio(), 4)
 
+def check_output_health(raw_text: str, pred: Optional[str]) -> Tuple[bool, str]:
+    if not raw_text or len(raw_text.strip()) < 15:
+        return False, "premature_termination"
+    # Check for boxed answer
+    has_boxed = bool(re.search(r"\\boxed\{([^}]+)\}", raw_text))
+    if not has_boxed:
+        return False, "missing_boxed"
+    if pred is None or len(str(pred).strip()) == 0:
+        return False, "no_valid_prediction"
+    # Check for repetitive loop
+    if re.search(r"(\b\w+\b[\s,.]*)\1{8,}", raw_text):
+        return False, "repetitive_loop"
+    if re.search(r"([!?.=,;:\-\+])\1{10,}", raw_text):
+        return False, "repetitive_punctuation"
+    return True, "healthy"
+
+def clone_dynamic_cache(cache: DynamicCache) -> DynamicCache:
+    new_cache = DynamicCache()
+    for l_idx, layer in enumerate(cache.layers):
+        new_cache.update(
+            layer.keys.clone(),
+            layer.values.clone(),
+            layer_idx=l_idx
+        )
+    return new_cache
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Run KV-cache tamper experiment sweep")
     parser.add_argument("--max_samples", type=int, default=30, help="Number of GSM8K examples")
@@ -92,7 +121,7 @@ def main():
     print(f"Samples: {args.max_samples} GSM8K problems")
     print(f"Decoding: Greedy (temperature=0.0)")
 
-    # 1. Disk management check before run
+    # Disk management check before run
     print(f"\n[Disk Check] logs/captured_kv size before sweep: {get_dir_size_str(args.captured_dir)}")
     if args.clear_captures:
         print("[Disk Management] --clear_captures is active: clearing logs/captured_kv...")
@@ -116,13 +145,79 @@ def main():
     print("[Model] Model loaded successfully.")
 
     # Define sweep combos:
-    # Combo format: dict with tamper_type, carrier, layer_range, strength
+    # 1. Clean
+    # 2. All layers at strengths: 0.1, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5
+    # 3. Single layer (middle layer 14 of 28) at strengths: 0.1, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5
     combos = [
-        {"tamper_type": "clean", "carrier": "none", "layer_range": "all", "strength": 0.0},
-        {"tamper_type": "noise", "carrier": "K", "layer_range": "all", "strength": 0.1},
-        {"tamper_type": "noise", "carrier": "K", "layer_range": "all", "strength": 0.5},
-        {"tamper_type": "noise", "carrier": "K", "layer_range": "all", "strength": 1.5},
+        {"tamper_type": "clean", "carrier": "none", "layer_scope": "none", "layer_range": None, "strength": 0.0},
     ]
+
+    all_strengths = [0.1, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5]
+
+    for s in all_strengths:
+        combos.append({
+            "tamper_type": "noise",
+            "carrier": "K",
+            "layer_scope": "all_layers",
+            "layer_range": None, # all layers (0-27)
+            "strength": s,
+        })
+
+    for s in all_strengths:
+        combos.append({
+            "tamper_type": "noise",
+            "carrier": "K",
+            "layer_scope": "layer_14_only",
+            "layer_range": (14, 14), # middle layer of the 28-layer stack
+            "strength": s,
+        })
+
+    print(f"\nTotal sweep combos configured: {len(combos)}")
+    for i, c in enumerate(combos):
+        print(f"  Combo {i:2d}: {c['tamper_type']:<6} | carrier={c['carrier']:<4} | scope={c['layer_scope']:<14} | strength={c['strength']}")
+
+    # Pre-compute upstream agent handoff (Planner -> Critic -> Refiner) for each sample
+    # Because Planner, Critic, and Refiner reasoning is completely deterministic and clean,
+    # caching Refiner's output KV cache allows all 15 combos to run with zero redundant computation!
+    print("\n[Optimization] Pre-computing clean Refiner KV caches for 30 samples...")
+    method_pre = LatentMASMethod(
+        model,
+        latent_steps=args.latent_steps,
+        judger_max_new_tokens=args.max_new_tokens,
+        temperature=0.0,
+        top_p=0.95,
+        generate_bs=1,
+        args=args,
+        kv_hook=None,
+    )
+
+    cached_refiner_kvs: Dict[int, DynamicCache] = {}
+    cached_judger_prompts: Dict[int, Tuple[torch.Tensor, torch.Tensor]] = {}
+
+    for item in tqdm(dataset_samples, desc="Pre-computing clean Refiner KVs"):
+        req_id = item["request_id"]
+        past_kv = None
+        # Run Planner, Critic, Refiner
+        for agent_idx, agent in enumerate(method_pre.agents):
+            if agent.role != "judger":
+                msg = [build_agent_message_sequential_latent_mas(
+                    role=agent.role, question=item["question"], context="", method="latent_mas", args=args
+                )]
+                prompts, ids, mask, _ = model.prepare_chat_batch(msg, add_generation_prompt=True)
+                past_kv = model.generate_latent_batch(
+                    ids, attention_mask=mask, latent_steps=args.latent_steps, past_key_values=past_kv
+                )
+            else:
+                # Prepare Judger prompt tokens
+                msg = [build_agent_message_sequential_latent_mas(
+                    role=agent.role, question=item["question"], context="", method="latent_mas", args=args
+                )]
+                prompts, ids, mask, _ = model.prepare_chat_batch(msg, add_generation_prompt=True)
+                cached_judger_prompts[req_id] = (ids, mask)
+
+        cached_refiner_kvs[req_id] = past_kv
+
+    print("[Optimization] Refiner KV caches pre-computed successfully.")
 
     os.makedirs(os.path.dirname(os.path.abspath(args.results_csv)), exist_ok=True)
     csv_headers = [
@@ -132,27 +227,29 @@ def main():
         "combo_id",
         "tamper_type",
         "carrier",
-        "layer_range",
+        "layer_scope",
         "strength",
         "prediction",
+        "raw_prediction",
         "correct",
         "clean_prediction",
         "clean_correct",
+        "output_healthy",
+        "unhealthy_reason",
         "text_similarity_vs_clean",
         "time_sec",
     ]
 
     results_rows = []
-
-    # Store clean baseline outputs per example_idx to compute text similarity
     clean_baselines: Dict[int, Dict[str, Any]] = {}
 
     for combo_idx, combo in enumerate(combos):
         t_type = combo["tamper_type"]
         carrier = combo["carrier"]
+        scope = combo["layer_scope"]
         l_range = combo["layer_range"]
         strength = combo["strength"]
-        combo_str = f"[{combo_idx+1}/{len(combos)}] {t_type.upper()} | carrier={carrier} | layers={l_range} | strength={strength}"
+        combo_str = f"[{combo_idx+1}/{len(combos)}] {t_type.upper()} | carrier={carrier} | scope={scope} | strength={strength}"
         print(f"\n--------------------------------------------------")
         print(f"Running Combo {combo_str}")
         print(f"--------------------------------------------------")
@@ -163,60 +260,66 @@ def main():
             print("[STOPPING] Halting sweep to protect disk space.")
             break
 
-        # Only enable raw capture if tamper_type == "swap"
-        capture_raw = (t_type == "swap")
-
-        # Build TamperHook if not clean
         tamper_hook = None
         if t_type != "clean":
             tamper_hook = TamperHook(
                 tamper_type=t_type,
                 carrier=carrier,
-                layer_range=None if l_range == "all" else l_range,
+                layer_range=l_range,
                 strength=strength,
                 target_handoff=("Refiner", "Judger"),
             )
 
-        # Build KVHookManager
-        kv_hook = KVHookManager(
-            log_csv_path=None,  # skip handoff CSV overhead during sweep runs
-            capture_raw=capture_raw,
-            capture_dir=args.captured_dir,
-            tamper_fn=tamper_hook,
-        )
-
-        method = LatentMASMethod(
-            model,
-            latent_steps=args.latent_steps,
-            judger_max_new_tokens=args.max_new_tokens,
-            temperature=0.0,  # greedy decoding for deterministic comparison
-            top_p=0.95,
-            generate_bs=1,
-            args=args,
-            kv_hook=kv_hook,
-        )
-
         correct_count = 0
+        healthy_count = 0
         total_time = 0.0
 
-        for item in tqdm(dataset_samples, desc=f"Combo {t_type} (s={strength})"):
+        for item in tqdm(dataset_samples, desc=f"Combo {combo_idx} ({scope} s={strength})"):
             req_id = item["request_id"]
             start_t = time.time()
-            res = method.run_item(item)
+
+            # Clone clean refiner KV cache
+            cloned_past = clone_dynamic_cache(cached_refiner_kvs[req_id])
+
+            # Apply tamper hook if present
+            if tamper_hook is not None:
+                cloned_past = tamper_hook(
+                    src_agent="Refiner",
+                    dst_agent="Judger",
+                    past_kv=cloned_past,
+                    request_id=req_id
+                )
+
+            # Generate Judger text
+            judger_ids, judger_mask = cached_judger_prompts[req_id]
+            gen_batch, _ = model.generate_text_batch(
+                judger_ids,
+                judger_mask,
+                max_new_tokens=args.max_new_tokens,
+                temperature=0.0,
+                top_p=0.95,
+                past_key_values=cloned_past,
+            )
+            raw_text = gen_batch[0].strip()
             elapsed = time.time() - start_t
             total_time += elapsed
 
-            pred = res.get("prediction")
-            gold = res.get("gold")
-            correct = res.get("correct", False)
+            pred = normalize_answer(extract_gsm8k_answer(raw_text))
+            gold = item["gold"]
+            correct = (pred == gold) if (pred and gold) else False
             if correct:
                 correct_count += 1
+
+            is_healthy, unhealthy_reason = check_output_health(raw_text, pred)
+            if is_healthy:
+                healthy_count += 1
 
             if t_type == "clean":
                 clean_baselines[req_id] = {
                     "prediction": pred,
-                    "raw_prediction": res.get("raw_prediction", ""),
+                    "raw_prediction": raw_text,
                     "correct": correct,
+                    "output_healthy": is_healthy,
                 }
                 clean_pred = pred
                 clean_ok = correct
@@ -225,10 +328,7 @@ def main():
                 clean_info = clean_baselines.get(req_id, {})
                 clean_pred = clean_info.get("prediction", "")
                 clean_ok = clean_info.get("correct", False)
-                similarity = compute_text_similarity(
-                    clean_info.get("raw_prediction", ""),
-                    res.get("raw_prediction", "")
-                )
+                similarity = compute_text_similarity(clean_info.get("raw_prediction", ""), raw_text)
 
             row = {
                 "example_idx": req_id,
@@ -237,26 +337,23 @@ def main():
                 "combo_id": combo_idx,
                 "tamper_type": t_type,
                 "carrier": carrier,
-                "layer_range": str(l_range),
+                "layer_scope": scope,
                 "strength": strength,
                 "prediction": pred,
+                "raw_prediction": raw_text[:300].replace("\n", " "),
                 "correct": correct,
                 "clean_prediction": clean_pred,
                 "clean_correct": clean_ok,
+                "output_healthy": is_healthy,
+                "unhealthy_reason": unhealthy_reason,
                 "text_similarity_vs_clean": similarity,
                 "time_sec": round(elapsed, 3),
             }
             results_rows.append(row)
 
-            # Disk cleanup if swap loaded any donor files
-            if t_type == "swap":
-                # delete donor file after extraction as required
-                donor_file = getattr(tamper_hook, "donor_kv_path", None)
-                if donor_file and os.path.exists(donor_file):
-                    os.remove(donor_file)
-
         acc = (correct_count / len(dataset_samples)) * 100.0
-        print(f"Summary for Combo: Accuracy = {acc:.1f}% ({correct_count}/{len(dataset_samples)}) | Time: {total_time:.1f}s")
+        healthy_pct = (healthy_count / len(dataset_samples)) * 100.0
+        print(f"Summary for Combo: Overall Acc = {acc:.1f}% ({correct_count}/{len(dataset_samples)}) | Healthy = {healthy_pct:.1f}% ({healthy_count}/{len(dataset_samples)}) | Time: {total_time:.1f}s")
 
     # Save to results CSV
     print(f"\n[Saving] Writing full sweep results to {args.results_csv}...")
@@ -271,23 +368,38 @@ def main():
     print(f"\n[Disk Check] Final size of logs/captured_kv/: {final_cap_size}")
 
     # Print summary table
-    print("\n==================================================")
-    print("              SWEEP SUMMARY RESULTS               ")
-    print("==================================================")
-    print(f"{'Combo':<10} {'Tamper':<8} {'Carrier':<8} {'Strength':<10} {'Accuracy':<10} {'Avg Sim vs Clean':<18}")
-    print("-" * 68)
+    print("\n=========================================================================================================")
+    print("                                      EXTENDED SWEEP RESULTS TABLE                                      ")
+    print("=========================================================================================================")
+    print(f"{'Combo':<6} {'Scope':<15} {'Carrier':<8} {'Strength':<10} {'Raw Acc':<10} {'Healthy %':<11} {'Healthy Acc':<13} {'Unhealthy %':<13} {'Avg Sim':<9}")
+    print("-" * 105)
 
     for combo_idx, combo in enumerate(combos):
         t_type = combo["tamper_type"]
         carrier = combo["carrier"]
+        scope = combo["layer_scope"]
         strength = combo["strength"]
-        matching_rows = [r for r in results_rows if r["combo_id"] == combo_idx]
-        if not matching_rows:
+        matching = [r for r in results_rows if r["combo_id"] == combo_idx]
+        if not matching:
             continue
-        acc = sum(1 for r in matching_rows if r["correct"]) / len(matching_rows) * 100.0
-        avg_sim = sum(r["text_similarity_vs_clean"] for r in matching_rows) / len(matching_rows)
-        print(f"{combo_idx:<10} {t_type:<8} {carrier:<8} {strength:<10} {acc:>5.1f}%     {avg_sim:>12.3f}")
-    print("==================================================")
+        total_n = len(matching)
+        raw_correct = sum(1 for r in matching if r["correct"])
+        raw_acc = (raw_correct / total_n) * 100.0
+
+        healthy_matching = [r for r in matching if r["output_healthy"]]
+        healthy_n = len(healthy_matching)
+        healthy_pct = (healthy_n / total_n) * 100.0
+        unhealthy_pct = 100.0 - healthy_pct
+
+        if healthy_n > 0:
+            healthy_correct = sum(1 for r in healthy_matching if r["correct"])
+            healthy_acc = f"{(healthy_correct / healthy_n) * 100.0:>5.1f}% ({healthy_correct}/{healthy_n})"
+        else:
+            healthy_acc = "N/A (0 healthy)"
+
+        avg_sim = sum(r["text_similarity_vs_clean"] for r in matching) / total_n
+        print(f"{combo_idx:<6} {scope:<15} {carrier:<8} {strength:<10} {raw_acc:>5.1f}%    {healthy_pct:>6.1f}%    {healthy_acc:<13} {unhealthy_pct:>6.1f}%       {avg_sim:>7.3f}")
+    print("=========================================================================================================")
 
 if __name__ == "__main__":
     main()
