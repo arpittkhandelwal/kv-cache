@@ -269,6 +269,7 @@ def main():
                 layer_range=l_range,
                 strength=strength,
                 target_handoff=("Refiner", "Judger"),
+                seed=args.seed,
             )
 
         correct_count = 0
