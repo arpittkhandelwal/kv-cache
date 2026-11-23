@@ -243,6 +243,8 @@ def main():
     print("\n--- Part 1: Inspecting Logit & KV Alignment Across Layers ---")
     prompt = build_gsm8k_prompt(tokenizer, "Janet’s ducks lay 16 eggs per day. She eats three for breakfast and bakes muffins with four. She sells the rest for $2 each. How much does she make?")
     enc = tokenizer(prompt, return_tensors="pt").to(device)
+    plen = enc["input_ids"].shape[-1]
+    pos_ids = torch.arange(plen, device=device).unsqueeze(0)
 
     with torch.no_grad():
         out_src = m06(**enc, use_cache=True)
@@ -252,17 +254,8 @@ def main():
         from cross_model_mapper import CrossModelKVMapper
         mapper_old = CrossModelKVMapper.load("logs/cross_model_mapper.pt")
         mapped_cache_old = mapper_old.map_cache(out_src.past_key_values, m06.model.rotary_emb, m17.model.rotary_emb, device=device)
-        out_mapped_old = m17(**enc, past_key_values=mapped_cache_old)
-        mapped_logits_old = out_mapped_old.logits[:, -1, :]
 
-        cos_sim_logits = F.cosine_similarity(tgt_logits_clean, mapped_logits_old).item()
-        top5_tgt = torch.topk(tgt_logits_clean[0], 5).indices.tolist()
-        top5_map = torch.topk(mapped_logits_old[0], 5).indices.tolist()
-
-        print(f"Prompt Final-Token Logit Cosine Similarity (k=1 mapper): {cos_sim_logits:.4f}")
-        print(f"Target Standalone Top-5 next tokens: {[tokenizer.decode([t]) for t in top5_tgt]}")
-        print(f"Mapped-KV Transfer Top-5 next tokens: {[tokenizer.decode([t]) for t in top5_map]}")
-
+        # Layer-by-layer KV cosine similarity before any forward pass
         print("\nLayer-by-Layer KV Cosine Similarity (Mapped vs Target-Standalone):")
         for l in [0, 1, 2, 5, 10, 15, 20, 25, 27]:
             k_tgt = out_tgt.past_key_values.layers[l].keys.float()
@@ -272,6 +265,7 @@ def main():
             sim_k = F.cosine_similarity(k_tgt.flatten(), k_map.flatten(), dim=0).item()
             sim_v = F.cosine_similarity(v_tgt.flatten(), v_map.flatten(), dim=0).item()
             print(f"  Layer {l:2d}: Key CosSim = {sim_k:.4f} | Value CosSim = {sim_v:.4f}")
+
 
     # Part 2: Calibration with 150 sequences & top-k comparison
     print("\n--- Part 2: Calibrating on 150 sequences & Comparing k=1, k=2, k=4 ---")
