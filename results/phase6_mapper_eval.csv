@@ -1,0 +1,11 @@
+request_id,gold,pred_src,correct_src,healthy_src,pred_tgt,correct_tgt,healthy_tgt,pred_mapped,correct_mapped,healthy_mapped,reason_mapped,len_src,len_tgt,len_mapped,sample_snippet
+0,18,16,False,False,26,False,False,18,True,False,missing_boxed,1774,1869,1874,"<think> Okay, let's see. The problem is about figuring out how much money Janet makes from selling eggs at the farmers' "
+1,3,3,True,True,3,True,True,3,True,True,healthy,794,940,1841,"<think> Okay, let's see. The problem is about calculating the total number of bolts of fiber a robe needs. The question "
+2,70000,80000,False,False,150,False,False,000,False,False,missing_boxed,1586,1657,1631,"<think> Okay, let's try to figure out Josh's profit here. So the question says he bought a house for $80,000 and then sp"
+3,540,180,False,True,60,False,False,54,False,False,missing_boxed,985,1704,1735,"<think> Okay, let's see. The question is about James running sprints. He does 3 sprints each week and each sprint is 60 "
+4,20,40,False,False,20,True,False,60,False,False,missing_boxed,1743,1855,2168,"<think> Okay, let's try to figure out how much feed Wendi needs for her chickens in the final meal.   First, the problem"
+5,64,16,False,False,60,False,False,4,False,False,missing_boxed,1027,1821,1738,"<think> Okay, let's try to figure out how much Kylar needs to pay for the glasses.   First, the problem says that the fi"
+6,260,260,True,False,2,False,False,18,False,False,missing_boxed,1761,1648,1766,"<think> Okay, let's try to solve this problem. So, the question is about figuring out how many sheep Toulouse, Charlesto"
+7,160,80,False,False,2,False,False,40,False,False,missing_boxed,2026,1854,1914,"<think> Okay, let's try to figure out this download problem. So Carla is trying to download a 200 GB file. Normally, she"
+8,45,4,False,False,2,False,False,3,False,False,missing_boxed,1758,1887,1994,"<think> Okay, let's see. The problem is about John trying to get home and figuring out how far he is from his house at t"
+9,460,406,False,True,460,True,True,1.2,False,False,missing_boxed,1015,1218,1750,"<think> Okay, let's see. The problem is about calculating Eliza's weekly earnings. Hmm, so first, I need to break down h"
