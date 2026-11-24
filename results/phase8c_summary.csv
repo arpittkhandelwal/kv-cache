@@ -1,0 +1,3 @@
+eps,clean_accuracy,svd_accuracy,svd_flips_c2w,rand_srcnorm_mean,rand_srcnorm_std,rand_srcnorm_flips_mean,rand_tgtnorm_mean,rand_tgtnorm_std,rand_tgtnorm_flips_mean
+0.08,30.0,13.33,7,27.78,3.14,4.33,23.33,4.71,6.0
+0.2,30.0,3.33,9,23.34,4.71,5.33,4.44,1.57,9.0
