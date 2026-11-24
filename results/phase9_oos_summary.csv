@@ -1,0 +1,17 @@
+condition,method,alpha,correct,total,accuracy,flips_c_to_w,flips_w_to_c,health_pct,time_sec,is_low_n
+clean_baseline,clean,0.0,20,30,66.67,0,0,100.0,235.0,True
+diffmean_alpha_1,diffmean,1.0,17,30,56.67,4,1,100.0,240.2,True
+pca_alpha_1,pca,1.0,17,30,56.67,4,1,100.0,260.3,True
+random_control_alpha_1,random,1.0,16,30,53.33,4,0,100.0,265.4,True
+diffmean_alpha_2,diffmean,2.0,15,30,50.0,5,0,100.0,262.2,True
+pca_alpha_2,pca,2.0,17,30,56.67,3,0,100.0,255.6,True
+random_control_alpha_2,random,2.0,16,30,53.33,5,1,100.0,253.3,True
+diffmean_alpha_4,diffmean,4.0,16,30,53.33,6,2,100.0,268.5,True
+pca_alpha_4,pca,4.0,16,30,53.33,4,0,100.0,245.4,True
+random_control_alpha_4,random,4.0,12,30,40.0,8,0,100.0,229.1,True
+diffmean_alpha_6,diffmean,6.0,8,30,26.67,12,0,100.0,160.0,True
+pca_alpha_6,pca,6.0,17,30,56.67,3,0,100.0,237.5,True
+random_control_alpha_6,random,6.0,4,30,13.33,16,0,83.33,142.2,True
+diffmean_alpha_8,diffmean,8.0,2,30,6.67,19,1,90.0,95.2,True
+pca_alpha_8,pca,8.0,20,30,66.67,2,2,100.0,237.8,True
+random_control_alpha_8,random,8.0,0,30,0.0,20,0,40.0,159.7,True

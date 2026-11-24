@@ -1,0 +1,31 @@
+request_id,question,gold,clean_pred,clean_correct,attacked_pred,attacked_correct,retained_in_S
+0,Janet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for ,18,18,True,18,True,False
+1,A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bolts in total does it ,3,3,True,3,True,False
+2,"Josh decides to try flipping a house.  He buys a house for $80,000 and then puts in $50,000 in repai",70000,120000,False,000,False,False
+3,James decides to run 3 sprints 3 times a week.  He runs 60 meters each sprint.  How many total meter,540,540,True,540,True,False
+4,"Every day, Wendi feeds each of her chickens three cups of mixed chicken feed, containing seeds, meal",20,20,True,25,False,True
+5,"Kylar went to the store to buy glasses for his new apartment. One glass costs $5, but every second g",64,11.21028,False,0.0504,False,False
+6,Toulouse has twice as many sheep as Charleston. Charleston has 4 times as many sheep as Seattle. How,260,260,True,260,True,False
+7,"Carla is downloading a 200 GB file. Normally she can download 2 GB/minute, but 40% of the way throug",160,40,False,60,False,False
+8,John drives for 3 hours at a speed of 60 mph and then turns around because he realizes he forgot som,45,4,False,4,False,False
+9,Eliza's rate per hour for the first 40 hours she works each week is $10. She also receives an overti,460,460,True,460,True,False
+10,A new program had 60 downloads in the first month. The number of downloads in the second month was t,366,366,True,366,True,False
+11,Toula went to the bakery and bought various types of pastries. She bought 3 dozen donuts which cost ,694,694,True,694,True,False
+12,"Carlos is planting a lemon tree. The tree will cost $90 to plant. Each year it will grow 7 lemons, w",13,7,False,12,False,False
+13,"Melanie is a door-to-door saleswoman. She sold a third of her vacuum cleaners at the green house, 2 ",18,2,False,2,False,False
+14,"In a dance class of 20 students, 20% enrolled in contemporary dance, 25% of the remaining enrolled i",60,60,True,55,False,True
+15,"A merchant wants to make a choice of purchase between 2 purchase plans: jewelry worth $5,000 or elec",125,125,True,125,True,False
+16,"Two trains leave San Rafael at the same time. They begin traveling westward, both traveling for 80 m",230,230,True,80,False,True
+17,Jill gets paid $20 per hour to teach and $30 to be a cheerleading coach. If she works 50 weeks a yea,57500,50,False,57500,True,False
+18,Claire makes a 3 egg omelet every morning for breakfast.  How many dozens of eggs will she eat in 4 ,7,7,True,7,True,False
+19,"Marissa is hiking a 12-mile trail. She took 1 hour to walk the first 4 miles, then another hour to w",6,12,False,3,False,False
+20,I have 10 liters of orange drink that are two-thirds water and I wish to add it to 15 liters of pine,15,15,True,24,False,True
+21,Raymond and Samantha are cousins. Raymond was born 6 years before Samantha. Raymond had a son at the,14,2,False,2,False,False
+22,Billy sells DVDs. He has 8 customers on Tuesday. His first 3 customers buy one DVD each.  His next 2,7,7,True,7,True,False
+23,A candle melts by 2 centimeters every hour that it burns. How many centimeters shorter will a candle,8,8,True,8,True,False
+24,Kyle bought last year's best-selling book for $19.50. This is with a 25% discount from the original ,26,26,True,78,False,True
+25,"Marie ordered one chicken meal that costs $12, 5 packs of milk that costs $3 each, 4 apples that cos",2,2,True,2,True,False
+26,"Mishka bought 3 pairs of shorts, 3 pairs of pants, and 3 pairs of shoes. One pair of shorts costs $1",243,243,True,243,True,False
+27,Cynthia eats one serving of ice cream every night.  She buys cartons of ice cream with 15 servings o,16,16,True,16,True,False
+28,Henry made two stops during his 60-mile bike trip. He first stopped after 20 miles. His second stop ,25,60,False,25,True,False
+29,"Gloria is shoe shopping when she comes across a pair of boots that fit her shoe budget. However, she",104,104,True,104,True,False
