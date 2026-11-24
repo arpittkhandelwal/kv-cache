@@ -1,0 +1,32 @@
+condition,method,alpha,accuracy_mean,accuracy_std,accuracy_str,flips_c_to_w_mean,flips_c_to_w_std,flips_w_to_c_mean,health_pct,low_n
+clean_baseline,clean,0.0,53.333333333333336,0.0, 53.3%,0.0,0.0,0.0,100.0,False
+diffmean_v2_all200_alpha_1,diffmean_v2_all200,1.0,50.0,0.0, 50.0%,4.0,0.0,2.0,100.0,False
+diffmean_v2_s2_weak_alpha_1,diffmean_v2_s2_weak,1.0,48.333333333333336,0.0, 48.3%,3.0,0.0,0.0,100.0,False
+prompt_shift_control_alpha_1,prompt_shift_control,1.0,51.66666666666667,0.0, 51.7%,2.0,0.0,1.0,98.33333333333333,False
+pca_centered_alpha_1,pca_centered,1.0,50.0,0.0, 50.0%,4.0,0.0,2.0,100.0,False
+pca_uncentered_alpha_1,pca_uncentered,1.0,51.66666666666667,0.0, 51.7%,2.0,0.0,1.0,100.0,False
+random_control_alpha_1,random,1.0,51.11,5.85, 51.1% ±  5.9%,3.0,2.0,1.7,100.0,False
+diffmean_v2_all200_alpha_2,diffmean_v2_all200,2.0,48.333333333333336,0.0, 48.3%,4.0,0.0,1.0,100.0,False
+diffmean_v2_s2_weak_alpha_2,diffmean_v2_s2_weak,2.0,48.333333333333336,0.0, 48.3%,4.0,0.0,1.0,100.0,False
+prompt_shift_control_alpha_2,prompt_shift_control,2.0,48.333333333333336,0.0, 48.3%,5.0,0.0,2.0,100.0,False
+pca_centered_alpha_2,pca_centered,2.0,50.0,0.0, 50.0%,3.0,0.0,1.0,100.0,False
+pca_uncentered_alpha_2,pca_uncentered,2.0,51.66666666666667,0.0, 51.7%,2.0,0.0,1.0,100.0,False
+random_control_alpha_2,random,2.0,49.44,2.55, 49.4% ±  2.5%,4.3,0.6,2.0,100.0,False
+diffmean_v2_all200_alpha_4,diffmean_v2_all200,4.0,48.333333333333336,0.0, 48.3%,3.0,0.0,0.0,100.0,False
+diffmean_v2_s2_weak_alpha_4,diffmean_v2_s2_weak,4.0,53.333333333333336,0.0, 53.3%,1.0,0.0,1.0,100.0,False
+prompt_shift_control_alpha_4,prompt_shift_control,4.0,53.333333333333336,0.0, 53.3%,4.0,0.0,4.0,100.0,False
+pca_centered_alpha_4,pca_centered,4.0,51.66666666666667,0.0, 51.7%,2.0,0.0,1.0,100.0,False
+pca_uncentered_alpha_4,pca_uncentered,4.0,46.666666666666664,0.0, 46.7%,4.0,0.0,0.0,100.0,False
+random_control_alpha_4,random,4.0,49.44,2.55, 49.4% ±  2.5%,3.3,1.5,1.0,100.0,False
+diffmean_v2_all200_alpha_6,diffmean_v2_all200,6.0,51.66666666666667,0.0, 51.7%,1.0,0.0,0.0,100.0,False
+diffmean_v2_s2_weak_alpha_6,diffmean_v2_s2_weak,6.0,48.333333333333336,0.0, 48.3%,4.0,0.0,1.0,100.0,False
+prompt_shift_control_alpha_6,prompt_shift_control,6.0,51.66666666666667,0.0, 51.7%,2.0,0.0,1.0,100.0,False
+pca_centered_alpha_6,pca_centered,6.0,46.666666666666664,0.0, 46.7%,5.0,0.0,1.0,100.0,False
+pca_uncentered_alpha_6,pca_uncentered,6.0,56.666666666666664,0.0, 56.7%,3.0,0.0,5.0,100.0,False
+random_control_alpha_6,random,6.0,47.78,1.92, 47.8% ±  1.9%,4.7,0.6,1.3,100.0,False
+diffmean_v2_all200_alpha_8,diffmean_v2_all200,8.0,51.66666666666667,0.0, 51.7%,2.0,0.0,1.0,100.0,False
+diffmean_v2_s2_weak_alpha_8,diffmean_v2_s2_weak,8.0,51.66666666666667,0.0, 51.7%,2.0,0.0,1.0,100.0,False
+prompt_shift_control_alpha_8,prompt_shift_control,8.0,50.0,0.0, 50.0%,3.0,0.0,1.0,100.0,False
+pca_centered_alpha_8,pca_centered,8.0,55.00000000000001,0.0, 55.0%,4.0,0.0,5.0,100.0,False
+pca_uncentered_alpha_8,pca_uncentered,8.0,50.0,0.0, 50.0%,5.0,0.0,3.0,100.0,False
+random_control_alpha_8,random,8.0,52.22,1.92, 52.2% ±  1.9%,4.3,0.6,3.7,100.0,False

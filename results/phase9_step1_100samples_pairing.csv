@@ -1,0 +1,101 @@
+request_id,question,gold,clean_pred,clean_correct,attacked_pred,attacked_correct,retained_in_S
+0,Janet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for ,18,18,True,18,True,False
+1,A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bolts in total does it ,3,3,True,3,True,False
+2,"Josh decides to try flipping a house.  He buys a house for $80,000 and then puts in $50,000 in repai",70000,00,False,80000,False,False
+3,James decides to run 3 sprints 3 times a week.  He runs 60 meters each sprint.  How many total meter,540,540,True,9,False,True
+4,"Every day, Wendi feeds each of her chickens three cups of mixed chicken feed, containing seeds, meal",20,20,True,20,True,False
+5,"Kylar went to the store to buy glasses for his new apartment. One glass costs $5, but every second g",64,1.8,False,0.0108,False,False
+6,Toulouse has twice as many sheep as Charleston. Charleston has 4 times as many sheep as Seattle. How,260,260,True,80,False,True
+7,"Carla is downloading a 200 GB file. Normally she can download 2 GB/minute, but 40% of the way throug",160,40,False,20,False,False
+8,John drives for 3 hours at a speed of 60 mph and then turns around because he realizes he forgot som,45,4,False,4,False,False
+9,Eliza's rate per hour for the first 40 hours she works each week is $10. She also receives an overti,460,460,True,40,False,True
+10,A new program had 60 downloads in the first month. The number of downloads in the second month was t,366,1,False,366,True,False
+11,Toula went to the bakery and bought various types of pastries. She bought 3 dozen donuts which cost ,694,694,True,694,True,False
+12,"Carlos is planting a lemon tree. The tree will cost $90 to plant. Each year it will grow 7 lemons, w",13,7,False,0,False,False
+13,"Melanie is a door-to-door saleswoman. She sold a third of her vacuum cleaners at the green house, 2 ",18,2,False,2,False,False
+14,"In a dance class of 20 students, 20% enrolled in contemporary dance, 25% of the remaining enrolled i",60,60,True,11,False,True
+15,"A merchant wants to make a choice of purchase between 2 purchase plans: jewelry worth $5,000 or elec",125,1.02,False,1.012,False,False
+16,"Two trains leave San Rafael at the same time. They begin traveling westward, both traveling for 80 m",230,150,False,150,False,False
+17,Jill gets paid $20 per hour to teach and $30 to be a cheerleading coach. If she works 50 weeks a yea,57500,15,False,115,False,False
+18,Claire makes a 3 egg omelet every morning for breakfast.  How many dozens of eggs will she eat in 4 ,7,7,True,7,True,False
+19,"Marissa is hiking a 12-mile trail. She took 1 hour to walk the first 4 miles, then another hour to w",6,12,False,12,False,False
+20,I have 10 liters of orange drink that are two-thirds water and I wish to add it to 15 liters of pine,15,1,False,5,False,False
+21,Raymond and Samantha are cousins. Raymond was born 6 years before Samantha. Raymond had a son at the,14,2,False,23,False,False
+22,Billy sells DVDs. He has 8 customers on Tuesday. His first 3 customers buy one DVD each.  His next 2,7,7,True,7,True,False
+23,A candle melts by 2 centimeters every hour that it burns. How many centimeters shorter will a candle,8,8,True,8,True,False
+24,Kyle bought last year's best-selling book for $19.50. This is with a 25% discount from the original ,26,26,True,78,False,True
+25,"Marie ordered one chicken meal that costs $12, 5 packs of milk that costs $3 each, 4 apples that cos",2,2,True,2,True,False
+26,"Mishka bought 3 pairs of shorts, 3 pairs of pants, and 3 pairs of shoes. One pair of shorts costs $1",243,42,False,243,True,False
+27,Cynthia eats one serving of ice cream every night.  She buys cartons of ice cream with 15 servings o,16,16,True,4,False,True
+28,Henry made two stops during his 60-mile bike trip. He first stopped after 20 miles. His second stop ,25,60,False,60,False,False
+29,"Gloria is shoe shopping when she comes across a pair of boots that fit her shoe budget. However, she",104,104,True,104,True,False
+30,"Darrell and Allen's ages are in the ratio of 7:11. If their total age now is 162, calculate Allen's ",109,109,True,11,False,True
+31,Gunter is trying to count the jelly beans in a jar. He asks his friends how many they think are in t,80,24,False,3,False,False
+32,John takes care of 10 dogs.  Each dog takes .5 hours a day to walk and take care of their business. ,35,35,True,35,True,False
+33,Gretchen has 110 coins. There are 30 more gold coins than silver coins. How many gold coins does Gre,70,70,True,70,True,False
+34,Siobhan has 2 fewer jewels than Aaron. Aaron has 5 more jewels than half of Raymond's jewels. If Ray,23,23,True,23,True,False
+35,"Mike plays ping pong for 40 minutes.  In the first 20 minutes, he scores 4 points.  In the second 20",9,9,True,9,True,False
+36,Terry eats 2 yogurts a day.  They are currently on sale at 4 yogurts for $5.00.  How much does he sp,75,2.50,False,75,True,False
+37,John plans to sell all his toys and use the money to buy video games. He has 13 lego sets and he sel,2,5,False,13,False,False
+38,John runs 60 miles a week. He runs 3 days a week.  He runs 3 hours the first day and half as much th,10,60,False,60,False,False
+39,"Dana can run at a rate of speed four times faster than she can walk, but she can skip at a rate of s",18,6,False,6,False,False
+40,Brandon's iPhone is four times as old as Ben's iPhone. Ben's iPhone is two times older than Suzy's i,8,8,True,8,True,False
+41,"The great dragon, Perg, sat high atop mount Farbo, breathing fire upon anything within a distance of",200,1200,False,1000,False,False
+42,Grandma Jones baked 5 apple pies for the fireman's luncheon.  She cut each pie into 8 pieces and set,26,26,True,26,True,False
+43,"According to its nutritional info, a bag of chips has 250 calories per serving. If a 300g bag has 5 ",48,0.16,False,1,False,False
+44,"Charlie wants to sell beeswax candles.  For every pound of beeswax, he can make 10 tapered candles. ",20,2,False,20,True,False
+45,Meredith is a freelance blogger who writes about health topics and submits to clients each day as he,104,16,False,56,False,False
+46,Candice put 80 post-it notes in her purse before she headed out to her job at the coffee shop.  On h,163,163,True,163,True,False
+47,John buys twice as many red ties as blue ties.  The red ties cost 50% more than blue ties.  He spent,800,600,False,200,False,False
+48,Tracy used a piece of wire 4 feet long to support tomato plants in the garden. The wire was cut into,8,8,True,8,True,False
+49,"Richard lives in an apartment building with 15 floors. Each floor contains 8 units, and 3/4 of the b",30,30,True,30,True,False
+50,Lloyd has an egg farm. His chickens produce 252 eggs per day and he sells them for $2 per dozen. How,294,294,True,294,True,False
+51,Tom's ship can travel at 10 miles per hour.  He is sailing from 1 to 4 PM.  He then travels back at ,5,30,False,3,False,False
+52,Uriah's book bag is getting too heavy for him. He needs to remove 15 pounds from it. His comic books,15,15,True,15,True,False
+53,A mechanic charges different rates to repair the tires of trucks and cars.  For each truck tire that,40,1,False,480,False,False
+54,The Doubtfire sisters are driving home with 7 kittens adopted from the local animal shelter when the,40,7,False,33,False,False
+55,"Jean has 30 lollipops. Jean eats 2 of the lollipops. With the remaining lollipops, Jean wants to pac",14,14,True,14,True,False
+56,Peter plans to go to the movies this week. He always gets a ticket for $7 and popcorn for $7. If he ,3,3,True,3,True,False
+57,"A wooden bridge can carry no more than 5000 pounds. A delivery truck filled with identical boxes, ea",83,2445,False,5000,False,False
+58,Stephen placed an online order for groceries.  His final bill came to $40.00.  Because this was thro,57,57,True,57.00,False,True
+59,A raspberry bush has 6 clusters of 20 fruit each and 67 individual fruit scattered across the bush. ,187,187,True,187,True,False
+60,"A basket contains 25 oranges among which 1 is bad, 20% are unripe, 2 are sour and the rest are good.",17,17,True,17,True,False
+61,Janet buys a brooch for her daughter.  She pays $500 for the material to make it and then another $8,1430,1430,True,1430,True,False
+62,"If Marcy works for the same company for 40 years, she gets an annual pension of $50,000/year. Starti",25000,0.05,False,5,False,False
+63,Aleena subscribed to a streaming service that charges her $140 per month. If the streaming company c,1596,8,False,266,False,False
+64,"Sophia is thinking of taking a road trip in her car, and would like to know how far she can drive on",300,1,False,100,False,False
+65,Jim spends 2 hours watching TV and then decides to go to bed and reads for half as long.  He does th,36,12,False,1,False,False
+66,There are four schools competing at a basketball tournament. Each school has sent a girls’ basketbal,48,2,False,4,False,False
+67,"A treasure hunter found a buried treasure chest filled with gems. There were 175 diamonds, 35 fewer ",595,1,False,140,False,False
+68,There are twice as many boys as girls at Dr. Wertz's school. If there are 60 girls and 5 students to,36,36,True,5,False,True
+69,Bailey starts with a certain amount of money. Then she receives a weekly allowance of $5 for 8 weeks,60,60,True,60,True,False
+70,"Judy teaches 5 dance classes, every day, on the weekdays and 8 classes on Saturday.  If each class h",7425,33,False,7425,True,False
+71,"Kelian has two recipes for preparing dishes, one having 20 instructions and the second one having tw",60,60,True,60,True,False
+72,Tommy is fundraising for his charity by selling brownies for $3 a slice and cheesecakes for $4 a sli,221,221,True,221,True,False
+73,Shiela bought five cell phones for $150 each for a 3-month installment. A 2% interest will be charge,255,5,False,750,False,False
+74,"Artie has a flower stand at the Farmers Market. He sells three kinds of flowers: marigolds, petunias",88,36,False,98.00,False,False
+75,Luke is spending time at the beach building sandcastles. He eventually notices that each level of a ,60,16,False,4,False,False
+76,"Cecilia just bought a new puppy. According to her veterinarian, she has to feed the puppy 1 cup of d",5,180,False,550,False,False
+77,"If Raymond does half as much laundry as Sarah, and Sarah does 4 times as much laundry as David, calc",100,100,True,100,True,False
+78,Vincent can buy flowers in packages of 3 for $2.50 or in packages of 2 for $1. How much money does h,6,6,True,2.50,False,True
+79,"John adopts a dog.  He takes the dog to the groomer, which costs $100.  The groomer offers him a 30%",70,70,True,70,True,False
+80,Two girls each got 1/6 of the 24 liters of water. Then a boy got 6 liters of water. How many liters ,10,10,True,14,False,True
+81,Charlie had 10 stickers. He bought 21 stickers from a store in the mall and got 23 stickers for his ,17,17,True,17,True,False
+82,Grace weighs 125 pounds. Alex weighs 2 pounds less than 4 times what Grace weighs. What are their co,623,623,True,498,False,True
+83,Dan plants 3 rose bushes. Each rose bush has 25 roses. Each rose has 8 thorns. How many thorns are t,600,75,False,600,True,False
+84,A football team played 22 games. They won 8 more than they lost. How many did they win?,15,15,True,15,True,False
+85,Gene is sewing a quilt out of old souvenir t-shirts. He has one shirt from each vacation he has been,44,44,True,44,True,False
+86,"Greg has an alarm set to ring three times a day as a reminder. When the alarm goes off, it continues",22,3,False,22,True,False
+87,A company pays each of its employees $600 in a month. The company has a policy of increasing the sal,9360,1.61051,False,5,False,False
+88,"Marilyn's first record sold 10 times as many copies as Harald's. If they sold 88,000 copies combined",8000,8000,True,10,False,True
+89,"Christina is planning a birthday party and needs .75 gift bags per invited guest, because 1/4 of att",24,24,True,9,False,True
+90,Ted the T-Rex was planning to bring potato salad to the dinosaur picnic.  He knows that an adult din,225,225,True,225,True,False
+91,Jan has three times the number of pets as Marcia. Marcia has two more pets than Cindy. If Cindy has ,28,28,True,28,True,False
+92,"Emily has 4 kids named Amy, Jackson, Corey, and James. Amy is 5 years older than Jackson and 2 years",4,2,False,5,False,False
+93,Lee used to be able to run the 400-meter hurdles two seconds faster than Gerald would run the 400-me,36,2,False,32.4,False,False
+94,"In a neighborhood, the number of rabbits pets is twelve less than the combined number of pet dogs an",348,180,False,168,False,False
+95,"Out of the 200 Grade 5 students, 2/5 are boys and 2/3 of the girls are in the girl scout. How many g",40,3,False,1,False,False
+96,Harry slept 9 hours last night. His friend James slept only 2/3 of what Harry slept. How many more h,3,3,True,3,True,False
+97,"When Freda cooks canned tomatoes into sauce, they lose half their volume. Each 16 ounce can of tomat",12,16,False,12,True,False
+98,Cars have lined up on the motorway. Some of the cars drive through in the first 15 minutes of the tr,5,5,True,15,False,True
+99,"Mary is an avid gardener. Yesterday, she received 18 new potted plants from her favorite plant nurse",58,18,False,40,False,False
